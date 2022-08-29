@@ -4,29 +4,58 @@ const SimpleInput = (props) => {
 	const [enteredName, setEnteredName] = useState("");
 	const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
+	const [enteredEmail, setEnteredEmail] = useState("");
+	const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+
 	const enteredNameIsValid = enteredName.trim() !== "";
 	const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
+	const enteredEmailIsValid =
+		enteredEmail.trim() !== "" && enteredEmail.includes("@");
+	const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+
+	let formIsValid = false;
+
+	if (enteredNameIsValid && enteredEmailIsValid) {
+		formIsValid = true;
+	}
+
 	const nameInputBlurHandler = (event) => {
 		setEnteredNameTouched(true);
+	};
+
+	const emailInputBlurHandler = (event) => {
+		setEnteredEmailTouched(true);
 	};
 
 	const nameInputChangeHandler = (event) => {
 		setEnteredName(event.target.value);
 	};
 
+	const emailInputChangeHandler = (event) => {
+		setEnteredEmail(event.target.value);
+	};
+
 	const formSubmissionHandler = (event) => {
 		event.preventDefault();
 		setEnteredNameTouched(true);
+		setEnteredEmailTouched(true);
 
 		if (!enteredNameIsValid) {
 			return;
 		}
 
+		if (!enteredEmailIsValid) {
+			return;
+		}
+
 		console.log(enteredName);
+		console.log(enteredEmail);
 
 		setEnteredName("");
 		setEnteredNameTouched(false);
+		setEnteredEmail("");
+		setEnteredEmailTouched(false);
 	};
 
 	const nameInputClasses = nameInputIsInvalid
@@ -47,8 +76,20 @@ const SimpleInput = (props) => {
 					<p className="error-text">Name must not be empty.</p>
 				)}
 			</div>
+			<div className={nameInputClasses}>
+				<label htmlFor="email">Your Email</label>
+				<input
+					type="text"
+					id="email"
+					onChange={emailInputChangeHandler}
+					onBlur={emailInputBlurHandler}
+				/>
+				{emailInputIsInvalid && (
+					<p className="error-text">Email must not be empty.</p>
+				)}
+			</div>
 			<div className="form-actions">
-				<button>Submit</button>
+				<button disabled={!formIsValid}>Submit</button>
 			</div>
 		</form>
 	);
